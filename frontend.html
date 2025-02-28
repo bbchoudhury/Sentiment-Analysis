@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Analysis with LLaMA2</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Sentiment Analysis Tool</h1>
+        <textarea id="inputText" placeholder="Enter text to analyze..."></textarea>
+        <div class="button-container">
+            <button onclick="analyzeSentiment()">Analyse Sentiment</button>
+        </div>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        async function analyzeSentiment() {
+            const text = document.getElementById('inputText').value;
+            const resultElement = document.getElementById('result');
+
+            resultElement.innerText = 'Analysing...';
+
+            const response = await fetch('/analyse-sentiment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                resultElement.innerText = 'Sentiment: ' + data.sentiment;
+            } else {
+                resultElement.innerText = 'Error analyzing sentiment.';
+            }
+        }
+    </script>
+</body>
+</html>
